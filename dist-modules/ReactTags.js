@@ -97,19 +97,19 @@ var ReactTags = function (_Component) {
   }, {
     key: "resetAndFocusInput",
     value: function resetAndFocusInput() {
+      this.textInput.value = "";
+      this.textInput.focus();
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
       var _props = this.props,
           autofocus = _props.autofocus,
           readOnly = _props.readOnly;
 
       if (autofocus && !readOnly) {
-        this.textInput.value = "";
-        this.textInput.focus();
+        this.resetAndFocusInput();
       }
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.resetAndFocusInput();
     }
   }, {
     key: "filteredSuggestions",
@@ -199,7 +199,7 @@ var ReactTags = function (_Component) {
         if (query !== "") {
           if (this.state.selectionMode && this.state.selectedIndex != -1) {
             query = this.state.suggestions[this.state.selectedIndex];
-          }
+          } else if (this.props.suggestionsOnly) return;
           this.addTag(query);
         }
       }
@@ -316,8 +316,9 @@ var ReactTags = function (_Component) {
 
       var moveTag = this.props.handleDrag ? this.moveTag : null;
 
+      var TagHoc = this.props.tagHoc(_Tag2.default);
       var tagItems = this.props.tags.map(function (tag, i) {
-        return _react2.default.createElement(_Tag2.default, {
+        return _react2.default.createElement(TagHoc, {
           key: tag.id,
           index: i,
           tag: tag,
@@ -406,10 +407,12 @@ ReactTags.PropTypes = {
   removeComponent: _propTypes2.default.func,
   autocomplete: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.number]),
   readOnly: _propTypes2.default.bool,
+  suggestionsOnly: _propTypes2.default.bool,
   classNames: _propTypes2.default.object,
   name: _propTypes2.default.string,
   id: _propTypes2.default.string,
-  maxLength: _propTypes2.default.string
+  maxLength: _propTypes2.default.string,
+  tagHoc: _propTypes2.default.func
 };
 
 ReactTags.defaultProps = {
@@ -422,7 +425,11 @@ ReactTags.defaultProps = {
   allowDeleteFromEmptyInput: true,
   minQueryLength: 2,
   autocomplete: false,
-  readOnly: false
+  readOnly: false,
+  suggestionsOnly: false,
+  tagHoc: function tagHoc(component) {
+    return component;
+  }
 };
 
 module.exports = {
