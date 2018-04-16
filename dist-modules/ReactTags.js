@@ -340,9 +340,13 @@ var ReactTags = function (_Component) {
           inputId = this.props.id,
           maxLength = this.props.maxLength;
 
+      var maxed = this.props.maxTags && this.props.tags.length >= this.props.maxTags;
       var tagInput = !this.props.readOnly ? _react2.default.createElement(
         "div",
-        { className: this.state.classNames.tagInput },
+        {
+          className: this.state.classNames.tagInput,
+          style: maxed ? { display: "none" } : {}
+        },
         _react2.default.createElement("input", {
           ref: function ref(input) {
             _this3.textInput = input;
@@ -412,7 +416,8 @@ ReactTags.PropTypes = {
   name: _propTypes2.default.string,
   id: _propTypes2.default.string,
   maxLength: _propTypes2.default.string,
-  tagHoc: _propTypes2.default.func
+  tagHoc: _propTypes2.default.func,
+  maxTags: _propTypes2.default.number
 };
 
 ReactTags.defaultProps = {
